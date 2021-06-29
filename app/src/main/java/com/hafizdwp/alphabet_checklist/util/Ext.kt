@@ -17,17 +17,21 @@ import com.hafizdwp.alphabet_checklist.data.ViewModelFactory
 
 
 inline fun <reified T : ViewModel> AppCompatActivity.obtainViewModel() =
-    ViewModelProviders.of(this, ViewModelFactory.getInstance(application)).get(T::class.java)
+        ViewModelProviders.of(this, ViewModelFactory.getInstance(application)).get(T::class.java)
 
 inline fun <reified VM : ViewModel> Fragment.obtainViewModel() =
-    ViewModelProviders.of(requireActivity(), ViewModelFactory.getInstance(requireActivity().application)).get(VM::class.java)
+        ViewModelProviders.of(requireActivity(), ViewModelFactory.getInstance(requireActivity().application)).get(VM::class.java)
 
 
-val gson by lazy { GsonBuilder().setPrettyPrinting().create() }
+val gson by lazy { Gson() }
+val gsonPretty by lazy { GsonBuilder().setPrettyPrinting().create() }
+
 
 inline fun <reified T> makeType() = object : TypeToken<T>() {}.type
 
-fun <T> T.toJson(): String = gson.toJson(this)
+fun <T> T.toJson(pretty: Boolean = false): String =
+        if (pretty) gsonPretty.toJson(this)
+        else gson.toJson(this)
 
 inline fun <reified T> String.fromJson(): T = gson.fromJson(this, makeType<T>())
 

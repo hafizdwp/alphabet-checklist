@@ -31,15 +31,15 @@ class ViewModelFactory(private val repository: Repository) : ViewModelProvider.F
 
         @JvmStatic
         fun getInstance(application: Application) =
-                instance ?: synchronized(ViewModelFactory::class.java) {
-                    instance ?: ViewModelFactory(provideRepository(application.applicationContext))
-                            .also { instance = it }
-                }
+            instance ?: synchronized(ViewModelFactory::class.java) {
+                instance ?: ViewModelFactory(provideRepository(application.applicationContext))
+                    .also { instance = it }
+            }
 
         private fun provideRepository(context: Context): Repository {
-//            val database = Database.getInstance(context)
+            val database = Database.getInstance(context)
             val rds = RemoteDataSource(ktorHttpClient)
-            val lds = LocalDataSource.getInstance()
+            val lds = LocalDataSource.getInstance(database)
 
             return Repository.getInstance(rds, lds)
         }

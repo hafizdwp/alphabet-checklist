@@ -1,5 +1,7 @@
 package com.hafizdwp.alphabet_checklist.data
 
+import com.hafizdwp.alphabet_checklist.data.local.table.Hero
+
 /**
  * @author hafizdwp
  * 17/05/2021
@@ -7,17 +9,13 @@ package com.hafizdwp.alphabet_checklist.data
 class Repository(private val remoteDataSource: RemoteDataSource,
                  private val localDataSource: LocalDataSource) {
 
-//    suspend fun initiateTable(list: List<Tes>) {
-//        localDataSource.initiateTable(list)
-//    }
-//
-//    suspend fun getAll(): List<Tes> {
-//        return localDataSource.getAll()
-//    }
-//
-//    suspend fun getRandomFact(): RandomFact {
-//        return remoteDataSource.getRandomFact()
-//    }
+    suspend fun addHero(hero: Hero) {
+        localDataSource.addHero(hero)
+    }
+
+    suspend fun getHeroes(): List<Hero> {
+        return localDataSource.getHeroes()
+    }
 
     companion object {
         private var instance: Repository? = null

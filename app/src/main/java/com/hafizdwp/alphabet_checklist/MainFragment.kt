@@ -18,10 +18,13 @@ class MainFragment : BaseFragment<MainActivity>(), MainActionListener {
     lateinit var addDialog: MainAddDialog
     lateinit var viewModel: MainViewModel
 
+    private var listItem = arrayListOf<Item>()
+
+
     override fun onViewReady(view: View) {
         viewModel = obtainViewModel()
 
-        adapter = MainAdapter()
+        adapter = MainAdapter(listItem)
         recycler_view.apply {
             adapter = this@MainFragment.adapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -32,9 +35,26 @@ class MainFragment : BaseFragment<MainActivity>(), MainActionListener {
         fab_add.setOnClickListener {
             addDialog.show()
         }
+
+        setupObserver()
+    }
+
+    fun setupObserver() = viewModel.apply {
+        sortedItems.observe { listHero ->
+            listHero?.let {
+                listItem.clear()
+                listItem.addAll(listHero)
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getHeroes()
     }
 
     override fun addName(name: String) {
-        viewModel.addName(name)
+        viewModel.addHero(name)
     }
 }
