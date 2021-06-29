@@ -2,11 +2,14 @@ package com.hafizdwp.alphabet_checklist
 
 import android.content.Context
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
@@ -93,4 +96,25 @@ fun Fragment.toast(msg: String?) {
 fun Fragment.toastSpammable(msg: String?,
                             length: Int = Toast.LENGTH_LONG) {
     (requireActivity() as? AppCompatActivity)?.toastSpammable(msg, length)
+}
+
+fun BottomSheetDialog.disableBottomSheetSwipe() {
+    try {
+        val behaviorField = this.javaClass.getDeclaredField("behavior")
+        behaviorField.isAccessible = true
+        val behavior = behaviorField[this] as? BottomSheetBehavior<*>
+        behavior?.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
+    } catch (e: NoSuchFieldException) {
+        e.printStackTrace()
+    } catch (e: IllegalAccessException) {
+        e.printStackTrace()
+    }
 }

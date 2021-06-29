@@ -9,4 +9,7 @@ import com.hafizdwp.alphabet_checklist.data.Repository
  **/
 class MainViewModel(private val repository: Repository) : BaseViewModel() {
 
+    fun addName(name: String) {
+
+    }
 }
